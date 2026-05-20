@@ -7,38 +7,36 @@ express.Router();
 const multer =
 require("multer");
 
-const path =
-require("path");
+const {
+
+CloudinaryStorage
+
+} = require(
+"multer-storage-cloudinary"
+);
+
+const cloudinary =
+require("../config/cloudinary");
 
 // STORAGE
 
 const storage =
-multer.diskStorage({
+new CloudinaryStorage({
 
-  destination:
-  (req, file, cb) => {
+  cloudinary,
 
-    cb(
-      null,
-      "uploads/"
-    );
+  params: {
 
-  },
+    folder:
+    "profile_images",
 
-  filename:
-  (req, file, cb) => {
+    allowed_formats: [
 
-    cb(
+      "jpg",
+      "png",
+      "jpeg",
 
-      null,
-
-      Date.now() +
-
-      path.extname(
-        file.originalname
-      )
-
-    );
+    ],
 
   },
 
@@ -59,19 +57,16 @@ router.post(
 
   upload.single("image"),
 
-  (req, res) => {
+  async (req, res) => {
 
     try {
-
-      const imageUrl =
-
-      `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
 
       res.json({
 
         success: true,
 
-        imageUrl,
+        imageUrl:
+        req.file.path,
 
       });
 
