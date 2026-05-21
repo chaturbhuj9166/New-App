@@ -3,7 +3,7 @@ node_modules/
 
 # ENV FILE
 .env
-serviceAccountKey.json
+
 
 # LOG FILES
 logs
