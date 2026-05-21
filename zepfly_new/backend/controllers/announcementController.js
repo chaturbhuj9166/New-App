@@ -11,6 +11,8 @@ const {
   createNotification,
 } = require("./notificationController");
 
+const { sendPushNotification } = require("../config/firebase");
+
 // =========================================
 // CREATE ANNOUNCEMENT
 // =========================================
@@ -78,7 +80,7 @@ async (req, res) => {
 
         role: "employee",
 
-      }).select("_id");
+      }).select("_id fcmToken");
 
       await Promise.all(
         employees.map((user) =>
@@ -90,6 +92,17 @@ async (req, res) => {
           }),
         ),
       );
+
+      // Send Push Notifications
+      const tokens = employees.map(emp => emp.fcmToken).filter(t => t);
+      if (tokens.length > 0) {
+        sendPushNotification(
+          tokens, 
+          "New Announcement 📢", 
+          title, 
+          { announcementId: announcement._id }
+        );
+      }
 
     }
 
@@ -110,6 +123,17 @@ async (req, res) => {
         announcement._id,
 
       });
+
+      // Send Push Notification
+      const employee = await User.findById(assignedTo).select("fcmToken");
+      if (employee && employee.fcmToken) {
+        sendPushNotification(
+          employee.fcmToken, 
+          "New Announcement 📢", 
+          title, 
+          { announcementId: announcement._id }
+        );
+      }
 
     }
 

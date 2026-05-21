@@ -55,6 +55,15 @@ new mongoose.Schema({
 
   },
 
+  // FCM TOKEN FOR PUSH NOTIFICATIONS
+  fcmToken: {
+
+    type: String,
+
+    default: "",
+
+  },
+
 }, {
 
   timestamps: true,

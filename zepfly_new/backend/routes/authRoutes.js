@@ -24,6 +24,8 @@ const {
 
   updateProfile,
 
+  updateFcmToken,
+
 } = require(
 
   "../controllers/authController"
@@ -172,6 +174,20 @@ router.put(
   authMiddleware,
 
   updateProfile
+
+);
+
+// =========================================
+// UPDATE FCM TOKEN
+// =========================================
+
+router.put(
+
+  "/fcm-token",
+
+  authMiddleware,
+
+  updateFcmToken
 
 );
 

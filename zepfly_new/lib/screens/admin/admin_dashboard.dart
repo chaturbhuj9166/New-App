@@ -12,8 +12,21 @@ import 'manage_users_screen.dart';
 
 import 'reports_screen.dart';
 
-class AdminDashboard extends StatelessWidget {
+import '../../services/fcm_service.dart';
+
+class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
+
+  @override
+  State<AdminDashboard> createState() => _AdminDashboardState();
+}
+
+class _AdminDashboardState extends State<AdminDashboard> {
+  @override
+  void initState() {
+    super.initState();
+    FcmService.initialize();
+  }
 
   @override
   Widget build(BuildContext context) {

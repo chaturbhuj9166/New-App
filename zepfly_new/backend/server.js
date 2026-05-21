@@ -11,6 +11,9 @@ require("cors");
 const connectDB =
 require("./config/db");
 
+// FIREBASE
+require("./config/firebase");
+
 const path = require("path");
 
 const uploadRoutes =

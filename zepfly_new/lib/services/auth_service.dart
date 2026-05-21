@@ -377,4 +377,54 @@ updateProfile({
 
   }
 
+  // =========================
+  // UPDATE FCM TOKEN
+  // =========================
+
+  Future<Map<String, dynamic>> updateFcmToken(String fcmToken) async {
+
+    try {
+
+      String? token = await getToken();
+
+      final url = Uri.parse("${ApiService.baseUrl}/auth/fcm-token");
+
+      final response = await http.put(
+
+        url,
+
+        headers: {
+
+          "Content-Type": "application/json",
+
+          "Authorization": "Bearer $token",
+
+        },
+
+        body: jsonEncode({
+
+          "fcmToken": fcmToken,
+
+        }),
+
+      );
+
+      return jsonDecode(response.body);
+
+    }
+
+    catch (error) {
+
+      return {
+
+        "success": false,
+
+        "message": error.toString(),
+
+      };
+
+    }
+
+  }
+
 }

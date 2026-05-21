@@ -12,6 +12,7 @@ import '../../routes/app_routes.dart';
 import '../../services/announcement_service.dart';
 import '../../services/attendance_service.dart';
 import '../../services/auth_service.dart';
+import '../../services/fcm_service.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -65,6 +66,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _requestNotificationPermission();
 
     _startPunchReminderWatcher();
+
+    FcmService.initialize();
   }
 
   // =====================================

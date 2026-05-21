@@ -642,6 +642,56 @@ async (req, res) => {
 };
 
 // =========================================
+// UPDATE FCM TOKEN
+// =========================================
+
+const updateFcmToken = async (req, res) => {
+
+  try {
+
+    const { fcmToken } = req.body;
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+
+      return res.status(404).json({
+
+        success: false,
+
+        message: "User Not Found",
+
+      });
+
+    }
+
+    user.fcmToken = fcmToken || "";
+
+    await user.save();
+
+    res.status(200).json({
+
+      success: true,
+
+      message: "FCM Token Updated Successfully",
+
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+
+      success: false,
+
+      message: error.message,
+
+    });
+
+  }
+
+};
+
+// =========================================
 // EXPORTS
 // =========================================
 
@@ -660,5 +710,7 @@ module.exports = {
   getProfile,
 
   updateProfile,
+
+  updateFcmToken,
 
 };
