@@ -8,17 +8,17 @@ const multer =
 require("multer");
 
 const {
-
-CloudinaryStorage
-
+  CloudinaryStorage
 } = require(
-"multer-storage-cloudinary"
+  "multer-storage-cloudinary"
 );
 
 const cloudinary =
 require("../config/cloudinary");
 
-// STORAGE
+// =========================
+// CLOUDINARY STORAGE
+// =========================
 
 const storage =
 new CloudinaryStorage({
@@ -33,14 +33,18 @@ new CloudinaryStorage({
     allowed_formats: [
 
       "jpg",
-      "png",
       "jpeg",
+      "png",
 
     ],
 
   },
 
 });
+
+// =========================
+// MULTER
+// =========================
 
 const upload =
 multer({
@@ -49,7 +53,9 @@ multer({
 
 });
 
+// =========================
 // UPLOAD ROUTE
+// =========================
 
 router.post(
 
@@ -74,7 +80,7 @@ router.post(
 
     catch(error){
 
-      res.json({
+      res.status(500).json({
 
         success: false,
 
