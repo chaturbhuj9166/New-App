@@ -142,6 +142,9 @@ const registerUser = async (req, res) => {
         role:
         user.role,
 
+        profileImage:
+        user.profileImage || "",
+
       },
 
     });
@@ -271,6 +274,9 @@ const loginUser = async (req, res) => {
 
         role:
         user.role,
+
+        profileImage:
+        user.profileImage || "",
 
       },
 

@@ -391,8 +391,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Row(
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, AppRoutes.profile);
+                    onTap: () async {
+                      await Navigator.pushNamed(context, AppRoutes.profile);
+                      getUserData();
                     },
 
                     child: CircleAvatar(

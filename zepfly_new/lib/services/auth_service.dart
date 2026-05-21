@@ -166,6 +166,15 @@ class AuthService {
 
         );
 
+        // PROFILE IMAGE
+        await prefs.setString(
+
+          "profileImage",
+
+          data["user"]["profileImage"] ?? "",
+
+        );
+
       }
 
       return data;
