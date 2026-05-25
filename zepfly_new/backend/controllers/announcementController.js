@@ -11,7 +11,8 @@ const {
   createNotification,
 } = require("./notificationController");
 
-const { sendPushNotification } = require("../config/firebase");
+const { sendPushNotification } =
+require("../config/firebase");
 
 // =========================================
 // CREATE ANNOUNCEMENT
@@ -93,15 +94,34 @@ async (req, res) => {
         ),
       );
 
-      // Send Push Notifications
-      const tokens = employees.map(emp => emp.fcmToken).filter(t => t);
+      // PUSH NOTIFICATION
+
+      const tokens =
+      employees
+
+      .map(emp => emp.fcmToken)
+
+      .filter(t => t);
+
       if (tokens.length > 0) {
+
         sendPushNotification(
-          tokens, 
-          "New Announcement 📢", 
-          title, 
-          { announcementId: announcement._id }
+
+          tokens,
+
+          "New Announcement 📢",
+
+          title,
+
+          {
+
+            announcementId:
+            announcement._id,
+
+          }
+
         );
+
       }
 
     }
@@ -124,15 +144,32 @@ async (req, res) => {
 
       });
 
-      // Send Push Notification
-      const employee = await User.findById(assignedTo).select("fcmToken");
-      if (employee && employee.fcmToken) {
+      // PUSH NOTIFICATION
+
+      const employee =
+      await User.findById(
+
+        assignedTo
+
+      ).select("fcmToken");
+
+      if (employee?.fcmToken && employee.fcmToken.trim()) {
+
+        console.log(`🚀 Sending notification to employee ${employee._id}...`);
+        
         sendPushNotification(
-          employee.fcmToken, 
-          "New Announcement 📢", 
-          title, 
-          { announcementId: announcement._id }
+          employee.fcmToken,
+          "New Announcement 📢",
+          title,
+          {
+            announcementId: announcement._id.toString(),
+          }
         );
+
+      } else {
+
+        console.warn(`⚠️ Employee ${assignedTo} has no valid FCM token`);
+
       }
 
     }
@@ -201,7 +238,15 @@ async (req, res) => {
 
       "assignedBy",
 
-      "name email role"
+      "name email role profileImage"
+
+    )
+
+    .populate(
+
+      "replies.user",
+
+      "name profileImage"
 
     )
 
@@ -212,24 +257,39 @@ async (req, res) => {
     });
 
     const formattedAnnouncements =
-      announcements.map((announcement) => ({
-        ...announcement.toObject(),
-        status:
-          announcement.status ||
-          (announcement.seenBy.some(
-            (id) => id.toString() === req.user.id,
-          )
-            ? "Seen"
-            : "Unread"),
-        reply:
-          announcement.reply || "",
-      }));
+    announcements.map((announcement) => ({
+
+      ...announcement.toObject(),
+
+      status:
+
+      announcement.status ||
+
+      (
+
+        announcement.seenBy.some(
+
+          (id) =>
+
+          id.toString()
+          === req.user.id,
+
+        )
+
+        ? "Seen"
+
+        : "Unread"
+
+      ),
+
+    }));
 
     res.status(200).json({
 
       success: true,
 
-      announcements: formattedAnnouncements,
+      announcements:
+      formattedAnnouncements,
 
     });
 
@@ -267,7 +327,14 @@ async (req, res) => {
 
     } = req.body;
 
-    if (!announcementId || !reply) {
+    // VALIDATION
+
+    if (
+
+      !announcementId ||
+      !reply
+
+    ) {
 
       return res.status(400)
       .json({
@@ -281,9 +348,13 @@ async (req, res) => {
 
     }
 
+    // FIND ANNOUNCEMENT
+
     const announcement =
     await Announcement.findById(
+
       announcementId,
+
     );
 
     if (!announcement) {
@@ -300,9 +371,17 @@ async (req, res) => {
 
     }
 
+    // SECURITY CHECK
+
     if (
+
       !announcement.sendToAll &&
-      announcement.assignedTo?.toString() !== req.user.id
+
+      announcement.assignedTo
+      ?.toString()
+
+      !== req.user.id
+
     ) {
 
       return res.status(403)
@@ -317,24 +396,55 @@ async (req, res) => {
 
     }
 
-    announcement.reply = reply;
+    // =========================================
+    // ADD MULTIPLE REPLY
+    // =========================================
+
+    announcement.replies.push({
+
+      user:
+      req.user.id,
+
+      message:
+      reply,
+
+    });
+
+    // STATUS
 
     announcement.status =
-    status ?? "Seen";
+    status ?? "Replied";
+
+    // SEEN CHECK
 
     if (
+
       !announcement.seenBy.some(
-        (id) => id.toString() === req.user.id,
+
+        (id) =>
+
+        id.toString()
+        === req.user.id,
+
       )
+
     ) {
 
       announcement.seenBy.push(
+
         req.user.id,
+
       );
 
     }
 
+    // SAVE
+
     await announcement.save();
+
+    // =========================================
+    // ADMIN NOTIFICATION
+    // =========================================
 
     await createNotification({
 
@@ -391,7 +501,9 @@ async (req, res) => {
 
     const announcement =
     await Announcement.findById(
+
       req.params.id
+
     );
 
     if(!announcement){
@@ -411,14 +523,22 @@ async (req, res) => {
     // ALREADY SEEN
 
     const alreadySeen =
+
     announcement.seenBy.some(
-      (id) => id.toString() === req.user.id,
+
+      (id) =>
+
+      id.toString()
+      === req.user.id,
+
     );
 
     if(!alreadySeen){
 
       announcement.seenBy.push(
+
         req.user.id
+
       );
 
       await announcement.save();
@@ -462,7 +582,9 @@ async (req, res) => {
 
     const announcement =
     await Announcement.findById(
+
       req.params.id
+
     );
 
     if(!announcement){

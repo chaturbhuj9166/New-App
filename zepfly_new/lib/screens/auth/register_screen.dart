@@ -41,6 +41,8 @@ extends State<RegisterScreen> {
   // LOADING
   bool isLoading = false;
 
+  bool obscurePassword = true;
+
   // REGISTER FUNCTION
   void registerUser() async {
 
@@ -202,16 +204,43 @@ extends State<RegisterScreen> {
               controller:
               passwordController,
 
-              obscureText: true,
+              obscureText:
+              obscurePassword,
 
               decoration:
-              const InputDecoration(
+              InputDecoration(
 
                 labelText:
                 "Password",
 
+                suffixIcon:
+                IconButton(
+
+                  onPressed: () {
+
+                    setState(() {
+
+                      obscurePassword =
+                      !obscurePassword;
+
+                    });
+
+                  },
+
+                  icon: Icon(
+
+                    obscurePassword
+
+                    ? Icons.visibility
+
+                    : Icons.visibility_off,
+
+                  ),
+
+                ),
+
                 border:
-                OutlineInputBorder(),
+                const OutlineInputBorder(),
 
               ),
 

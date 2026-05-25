@@ -14,7 +14,7 @@ import '../auth/login_screen.dart';
 class ProfileScreen extends StatefulWidget {
 
   const ProfileScreen({
-    super.key,
+    super.key,  
   });
 
   @override
@@ -262,6 +262,7 @@ extends State<ProfileScreen> {
         content: Text(
 
           response["message"],
+         
 
         ),
 
@@ -269,7 +270,15 @@ extends State<ProfileScreen> {
 
     );
 
+    if(mounted){
+
+  Navigator.pop(context, true);
+
+}
+
   }
+
+
 
   // =========================
   // LOGOUT

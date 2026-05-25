@@ -54,19 +54,60 @@ new mongoose.Schema({
 
     type: String,
 
-    enum: ["Unread", "Seen", "Replied"],
+    enum: [
+
+      "Unread",
+
+      "Seen",
+
+      "Replied",
+
+    ],
 
     default: "Unread",
 
   },
 
-  reply: {
+  // =========================================
+  // MULTIPLE REPLIES
+  // =========================================
 
-    type: String,
+  replies: [
 
-    default: "",
+    {
 
-  },
+      user: {
+
+        type:
+        mongoose.Schema.Types.ObjectId,
+
+        ref: "User",
+
+      },
+
+      message: {
+
+        type: String,
+
+        required: true,
+
+      },
+
+      createdAt: {
+
+        type: Date,
+
+        default: Date.now,
+
+      },
+
+    },
+
+  ],
+
+  // =========================================
+  // SEEN USERS
+  // =========================================
 
   seenBy: [
 
@@ -77,7 +118,7 @@ new mongoose.Schema({
 
       ref: "User",
 
-    }
+    },
 
   ],
 

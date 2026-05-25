@@ -58,6 +58,14 @@ const sendPushNotification = async (tokens, title, body, data = {}) => {
           title,
           body,
         },
+        android: {
+          priority: "high",
+          notification: {
+            icon: "ic_launcher", // Ye aapka app icon hai
+            color: "#FF0000",    // Aapka brand color
+            clickAction: "FLUTTER_NOTIFICATION_CLICK",
+          },
+        },
         data: stringifiedData
       });
       console.log("🚀 FCM Notification sent successfully:", response);
@@ -67,6 +75,14 @@ const sendPushNotification = async (tokens, title, body, data = {}) => {
         notification: {
           title,
           body,
+        },
+        android: {
+          priority: "high",
+          notification: {
+            icon: "ic_launcher",
+            color: "#FF0000",
+            clickAction: "FLUTTER_NOTIFICATION_CLICK",
+          },
         },
         data: stringifiedData
       });

@@ -59,8 +59,10 @@ new mongoose.Schema({
   fcmToken: {
 
     type: String,
-
-    default: "",
+    
+    default: null,
+    
+    sparse: true,
 
   },
 

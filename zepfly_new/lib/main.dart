@@ -2,55 +2,30 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:timezone/data/latest.dart' as tz;
 
 import 'routes/app_routes.dart';
-
 import 'theme/app_theme.dart';
+import 'services/firebase_notification_service.dart';
 
 // =========================
-// NOTIFICATION PLUGIN
+// BACKGROUND MESSAGE HANDLER
 // =========================
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
+  // Local notification will be handled by FirebaseNotificationService
 }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // =========================
+  // FIREBASE INIT
+  // =========================
+
   await Firebase.initializeApp();
-
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  FirebaseMessaging.onMessage.listen((message) async {
-    final notification = message.notification;
-    if (notification != null) {
-      const AndroidNotificationDetails androidDetails =
-          AndroidNotificationDetails(
-            'fcm_channel',
-            'FCM Notifications',
-            importance: Importance.max,
-            priority: Priority.high,
-          );
-
-      const NotificationDetails notificationDetails = NotificationDetails(
-        android: androidDetails,
-      );
-
-      await flutterLocalNotificationsPlugin.show(
-        notification.hashCode,
-        notification.title,
-        notification.body,
-        notificationDetails,
-      );
-    }
-  });
 
   // =========================
   // TIMEZONE INIT
@@ -59,25 +34,16 @@ Future<void> main() async {
   tz.initializeTimeZones();
 
   // =========================
-  // ANDROID SETTINGS
+  // INITIALIZE FIREBASE NOTIFICATIONS
   // =========================
 
-  const AndroidInitializationSettings androidSettings =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
+  await FirebaseNotificationService.initializeNotifications();
 
   // =========================
-  // INIT SETTINGS
+  // SET BACKGROUND MESSAGE HANDLER
   // =========================
 
-  const InitializationSettings initializationSettings = InitializationSettings(
-    android: androidSettings,
-  );
-
-  // =========================
-  // INIT NOTIFICATION
-  // =========================
-
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   // =========================
   // RUN APP

@@ -195,7 +195,7 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
                             final String status =
                                 announcement["status"] ?? "Unread";
 
-                            final String reply = announcement["reply"] ?? "";
+                            final List replies = announcement["replies"] ?? [];
 
                             return Container(
                               margin: const EdgeInsets.only(bottom: 20),
@@ -281,46 +281,177 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
                                   const SizedBox(height: 20),
 
                                   // REPLY BOX
-                                  Container(
-                                    width: double.infinity,
+                                Container(
 
-                                    padding: const EdgeInsets.all(15),
+  width: double.infinity,
 
-                                    decoration: BoxDecoration(
-                                      color: Colors.black26,
+  padding: const EdgeInsets.all(15),
 
-                                      borderRadius: BorderRadius.circular(18),
-                                    ),
+  decoration: BoxDecoration(
 
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+    color: Colors.black26,
 
-                                      children: [
-                                        const Text(
-                                          "Your Reply",
+    borderRadius: BorderRadius.circular(18),
 
-                                          style: TextStyle(
-                                            color: Colors.white,
+  ),
 
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
+  child: Column(
 
-                                        const SizedBox(height: 10),
+    crossAxisAlignment:
+    CrossAxisAlignment.start,
 
-                                        Text(
-                                          reply.isEmpty
-                                              ? "No Reply Yet"
-                                              : reply,
+    children: [
 
-                                          style: const TextStyle(
-                                            color: Colors.white70,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+      const Text(
+
+        "Replies",
+
+        style: TextStyle(
+
+          color: Colors.white,
+
+          fontWeight: FontWeight.bold,
+
+          fontSize: 16,
+
+        ),
+
+      ),
+
+      const SizedBox(height: 15),
+
+      replies.isEmpty
+
+      ? const Text(
+
+          "No Replies Yet",
+
+          style: TextStyle(
+
+            color: Colors.white70,
+
+          ),
+
+        )
+
+      : Column(
+
+          children: replies.map<Widget>((replyData) {
+
+            final user =
+            replyData["user"];
+
+            final message =
+            replyData["message"] ?? "";
+
+            final userName =
+            user != null
+
+            ? user["name"] ?? "Employee"
+
+            : "Employee";
+
+            return Container(
+
+              margin:
+              const EdgeInsets.only(bottom: 12),
+
+              padding:
+              const EdgeInsets.all(12),
+
+              decoration: BoxDecoration(
+
+                color: Colors.white10,
+
+                borderRadius:
+                BorderRadius.circular(14),
+
+              ),
+
+              child: Row(
+
+                crossAxisAlignment:
+                CrossAxisAlignment.start,
+
+                children: [
+
+                  const CircleAvatar(
+
+                    backgroundColor:
+                    Colors.blue,
+
+                    child: Icon(
+
+                      Icons.person,
+
+                      color: Colors.white,
+
+                    ),
+
+                  ),
+
+                  const SizedBox(width: 12),
+
+                  Expanded(
+
+                    child: Column(
+
+                      crossAxisAlignment:
+                      CrossAxisAlignment.start,
+
+                      children: [
+
+                        Text(
+
+                          userName,
+
+                          style: const TextStyle(
+
+                            color: Colors.white,
+
+                            fontWeight:
+                            FontWeight.bold,
+
+                          ),
+
+                        ),
+
+                        const SizedBox(height: 5),
+
+                        Text(
+
+                          message,
+
+                          style: const TextStyle(
+
+                            color: Colors.white70,
+
+                          ),
+
+                        ),
+
+                      ],
+
+                    ),
+
+                  ),
+
+                ],
+
+              ),
+
+            );
+
+          }).toList(),
+
+        ),
+
+    ],
+
+  ),
+
+  ),
+
 
                                   const SizedBox(height: 20),
 

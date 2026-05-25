@@ -14,6 +14,8 @@ import 'reports_screen.dart';
 
 import '../../services/fcm_service.dart';
 
+import 'admin_announcements_screen.dart';
+
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
 
@@ -168,6 +170,27 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
                         MaterialPageRoute(
                           builder: (context) => const ReportsScreen(),
+                        ),
+                      );
+                    },
+                  ),
+
+                  dashboardCard(
+                    context,
+
+                    title: "Employee Replies",
+
+                    icon: Icons.forum,
+
+                    color: Colors.teal,
+
+                    onTap: () {
+                      Navigator.push(
+                        context,
+
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const AdminAnnouncementsScreen(),
                         ),
                       );
                     },
