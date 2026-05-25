@@ -4,39 +4,23 @@ import '../../services/auth_service.dart';
 
 import 'login_screen.dart';
 
-class RegisterScreen
-extends StatefulWidget {
-
-  const RegisterScreen({
-    super.key,
-  });
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<RegisterScreen>
-  createState() =>
-  _RegisterScreenState();
-
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState
-extends State<RegisterScreen> {
-
+class _RegisterScreenState extends State<RegisterScreen> {
   // CONTROLLERS
-  final TextEditingController
-  nameController =
-  TextEditingController();
+  final TextEditingController nameController = TextEditingController();
 
-  final TextEditingController
-  emailController =
-  TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
-  final TextEditingController
-  passwordController =
-  TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   // AUTH SERVICE
-  final AuthService authService =
-  AuthService();
+  final AuthService authService = AuthService();
 
   // LOADING
   bool isLoading = false;
@@ -45,278 +29,249 @@ extends State<RegisterScreen> {
 
   // REGISTER FUNCTION
   void registerUser() async {
+    if (nameController.text.trim().isEmpty ||
+        emailController.text.trim().isEmpty ||
+        passwordController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Please fill all fields")));
+      return;
+    }
 
     setState(() {
-
       isLoading = true;
-
     });
 
-    final response =
-      await authService
-      .registerUser(
+    final response = await authService.registerUser(
+      name: nameController.text.trim(),
 
-        name:
-        nameController.text.trim(),
+      email: emailController.text.trim(),
 
-        email:
-        emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
 
-        password:
-        passwordController.text.trim(),
-
-      );
+    if (!mounted) return;
 
     setState(() {
-
       isLoading = false;
-
     });
 
     // SUCCESS
-    if(response["success"] == true){
-
-      ScaffoldMessenger.of(context)
-      .showSnackBar(
-
-        SnackBar(
-
-          content: Text(
-            response["message"]
-          ),
-
-        ),
-
-      );
+    if (response["success"] == true) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(response["message"])));
 
       // GO TO LOGIN
       Navigator.pushReplacement(
-
         context,
 
-        MaterialPageRoute(
-
-          builder: (context) =>
-          const LoginScreen(),
-
-        ),
-
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
       );
-
     }
-
     // ERROR
     else {
-
-      ScaffoldMessenger.of(context)
-      .showSnackBar(
-
-        SnackBar(
-
-          content: Text(
-            response["message"]
-          ),
-
-        ),
-
-      );
-
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(response["message"])));
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
-      appBar: AppBar(
-
-        title: const Text(
-          "Register",
-        ),
-
-        centerTitle: true,
-
-      ),
-
-      body: Padding(
-
-        padding:
-        const EdgeInsets.all(20),
-
-        child: Column(
-
-          mainAxisAlignment:
-          MainAxisAlignment.center,
-
-          children: [
-
-            // NAME
-            TextField(
-
-              controller:
-              nameController,
-
-              decoration:
-              const InputDecoration(
-
-                labelText:
-                "Name",
-
-                border:
-                OutlineInputBorder(),
-
+      backgroundColor: const Color(0xFF0F172A),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(25),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              // =========================
+              // LOGO
+              // =========================
+              Center(
+                child: Container(
+                  width: 110,
+                  height: 110,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF2563EB), Color(0xFF06B6D4)],
+                    ),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: const Icon(
+                    Icons.fingerprint,
+                    color: Colors.white,
+                    size: 60,
+                  ),
+                ),
               ),
 
-            ),
+              const SizedBox(height: 40),
 
-            const SizedBox(
-              height: 20,
-            ),
-
-            // EMAIL
-            TextField(
-
-              controller:
-              emailController,
-
-              decoration:
-              const InputDecoration(
-
-                labelText:
-                "Email",
-
-                border:
-                OutlineInputBorder(),
-
+              // =========================
+              // TITLE
+              // =========================
+              Center(
+                child: Column(
+                  children: [
+                    const Text(
+                      "Register First 🚀",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      "Create an account to start using Zepfly PunchIn",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white70, fontSize: 16),
+                    ),
+                  ],
+                ),
               ),
 
-            ),
+              const SizedBox(height: 40),
 
-            const SizedBox(
-              height: 20,
-            ),
+              // =========================
+              // NAME
+              // =========================
+              TextField(
+                controller: nameController,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: "Enter Name",
+                  hintStyle: const TextStyle(color: Colors.white54),
+                  prefixIcon: const Icon(Icons.person, color: Colors.white70),
+                  filled: true,
+                  fillColor: Colors.white10,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
 
-            // PASSWORD
-            TextField(
+              const SizedBox(height: 20),
 
-              controller:
-              passwordController,
+              // =========================
+              // EMAIL
+              // =========================
+              TextField(
+                controller: emailController,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: "Enter Email",
+                  hintStyle: const TextStyle(color: Colors.white54),
+                  prefixIcon: const Icon(Icons.email, color: Colors.white70),
+                  filled: true,
+                  fillColor: Colors.white10,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
 
-              obscureText:
-              obscurePassword,
+              const SizedBox(height: 20),
 
-              decoration:
-              InputDecoration(
+              // =========================
+              // PASSWORD
+              // =========================
+              TextField(
+                controller: passwordController,
+                obscureText: obscurePassword,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: "Enter Password",
+                  hintStyle: const TextStyle(color: Colors.white54),
+                  prefixIcon: const Icon(Icons.lock, color: Colors.white70),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        obscurePassword = !obscurePassword;
+                      });
+                    },
+                    icon: Icon(
+                      obscurePassword ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.white70,
+                    ),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white10,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
 
-                labelText:
-                "Password",
+              const SizedBox(height: 35),
 
-                suffixIcon:
-                IconButton(
+              // =========================
+              // REGISTER BUTTON
+              // =========================
+              SizedBox(
+                width: double.infinity,
+                height: 60,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF2563EB),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  onPressed: isLoading ? null : registerUser,
+                  child: isLoading
+                      ? const SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text(
+                          "Register",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                ),
+              ),
 
+              const SizedBox(height: 25),
+
+              // =========================
+              // LOGIN LINK
+              // =========================
+              Center(
+                child: TextButton(
                   onPressed: () {
-
-                    setState(() {
-
-                      obscurePassword =
-                      !obscurePassword;
-
-                    });
-
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                    );
                   },
-
-                  icon: Icon(
-
-                    obscurePassword
-
-                    ? Icons.visibility
-
-                    : Icons.visibility_off,
-
+                  child: const Text(
+                    "Already have an account? Login",
+                    style: TextStyle(color: Colors.white70),
                   ),
-
                 ),
-
-                border:
-                const OutlineInputBorder(),
-
               ),
-
-            ),
-
-            const SizedBox(
-              height: 30,
-            ),
-
-            // REGISTER BUTTON
-            SizedBox(
-
-              width: double.infinity,
-
-              height: 55,
-
-              child: ElevatedButton(
-
-                onPressed:
-                isLoading
-                ? null
-                : registerUser,
-
-                child:
-                isLoading
-
-                ? const CircularProgressIndicator()
-
-                : const Text(
-                  "Register",
-                ),
-
-              ),
-
-            ),
-
-            const SizedBox(
-              height: 20,
-            ),
-
-            // LOGIN BUTTON
-            TextButton(
-
-              onPressed: () {
-
-                Navigator.push(
-
-                  context,
-
-                  MaterialPageRoute(
-
-                    builder: (context) =>
-                    const LoginScreen(),
-
-                  ),
-
-                );
-
-              },
-
-              child: const Text(
-
-                "Already have an account? Login",
-
-              ),
-
-            ),
-
-          ],
-
+            ],
+          ),
         ),
-
       ),
-
     );
-
   }
-
 }

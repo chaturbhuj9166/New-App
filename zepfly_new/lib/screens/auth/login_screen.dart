@@ -6,42 +6,27 @@ import '../employee/dashboard_screen.dart';
 
 import 'register_screen.dart';
 
-class LoginScreen
-extends StatefulWidget {
-
-  const LoginScreen({
-    super.key,
-  });
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<LoginScreen>
-  createState() =>
-  _LoginScreenState();
-
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState
-extends State<LoginScreen> {
-
+class _LoginScreenState extends State<LoginScreen> {
   // =========================
   // CONTROLLERS
   // =========================
 
-  final TextEditingController
-  emailController =
-  TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
-  final TextEditingController
-  passwordController =
-  TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   // =========================
   // AUTH SERVICE
   // =========================
 
-  final AuthService
-  authService =
-  AuthService();
+  final AuthService authService = AuthService();
 
   // =========================
   // VARIABLES
@@ -56,540 +41,276 @@ extends State<LoginScreen> {
   // =========================
 
   void loginUser() async {
-
     // VALIDATION
-    if(
-
-      emailController.text
-      .trim()
-      .isEmpty ||
-
-      passwordController.text
-      .trim()
-      .isEmpty
-
-    ){
-
-      ScaffoldMessenger.of(context)
-      .showSnackBar(
-
-        const SnackBar(
-
-          content: Text(
-            "Please fill all fields",
-          ),
-
-        ),
-
-      );
+    if (emailController.text.trim().isEmpty ||
+        passwordController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Please fill all fields")));
 
       return;
-
     }
 
     setState(() {
-
       isLoading = true;
-
     });
 
-    final response =
-    await authService.loginUser(
+    final response = await authService.loginUser(
+      email: emailController.text.trim(),
 
-      email:
-      emailController.text.trim(),
-
-      password:
-      passwordController.text.trim(),
-
+      password: passwordController.text.trim(),
     );
 
-    if(!mounted) return;
+    if (!mounted) return;
 
     setState(() {
-
       isLoading = false;
-
     });
 
     // =========================
     // SUCCESS
     // =========================
 
-    if(response["success"] == true){
-
-      ScaffoldMessenger.of(context)
-      .showSnackBar(
-
-        SnackBar(
-
-          content: Text(
-
-            response["message"]
-            ?? "Login Successful",
-
-          ),
-
-        ),
-
+    if (response["success"] == true) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(response["message"] ?? "Login Successful")),
       );
 
       Navigator.pushReplacement(
-
         context,
 
-        MaterialPageRoute(
-
-          builder: (context) =>
-          const DashboardScreen(),
-
-        ),
-
+        MaterialPageRoute(builder: (context) => const DashboardScreen()),
       );
-
     }
-
     // =========================
     // ERROR
     // =========================
-
     else {
-
-      ScaffoldMessenger.of(context)
-      .showSnackBar(
-
-        SnackBar(
-
-          content: Text(
-
-            response["message"]
-            ?? "Login Failed",
-
-          ),
-
-        ),
-
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(response["message"] ?? "Login Failed")),
       );
-
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
-      backgroundColor:
-      const Color(0xFF0F172A),
+      backgroundColor: const Color(0xFF0F172A),
 
       body: SafeArea(
-
         child: SingleChildScrollView(
-
-          padding:
-          const EdgeInsets.all(25),
+          padding: const EdgeInsets.all(25),
 
           child: Column(
-
-            crossAxisAlignment:
-            CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
 
             children: [
-
-              const SizedBox(
-                height: 40,
-              ),
+              const SizedBox(height: 40),
 
               // =========================
               // LOGO
               // =========================
-
               Center(
-
                 child: Container(
-
                   width: 110,
 
                   height: 110,
 
-                  decoration:
-                  BoxDecoration(
-
-                    gradient:
-                    const LinearGradient(
-
-                      colors: [
-
-                        Color(0xFF2563EB),
-
-                        Color(0xFF06B6D4),
-
-                      ],
-
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF2563EB), Color(0xFF06B6D4)],
                     ),
 
-                    borderRadius:
-                    BorderRadius.circular(30),
-
+                    borderRadius: BorderRadius.circular(30),
                   ),
 
                   child: const Icon(
-
                     Icons.fingerprint,
 
                     color: Colors.white,
 
                     size: 60,
-
                   ),
-
                 ),
-
               ),
 
-              const SizedBox(
-                height: 40,
-              ),
+              const SizedBox(height: 40),
 
               // =========================
               // TITLE
               // =========================
-
-              const Text(
-
-                "Welcome Back 👋",
-
-                style: TextStyle(
-
-                  color:
-                  Colors.white,
-
-                  fontSize: 32,
-
-                  fontWeight:
-                  FontWeight.bold,
-
+              Center(
+                // Added Center widget to horizontally center the text
+                child: Column(
+                  children: [
+                    const Text(
+                      "Welcome Back 👋",
+                      textAlign: TextAlign
+                          .center, // Ensures text is centered within its own bounds
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      "Login to continue using PunchIn Pro",
+                      textAlign: TextAlign
+                          .center, // Ensures text is centered within its own bounds
+                      style: TextStyle(color: Colors.white70, fontSize: 16),
+                    ),
+                  ],
                 ),
-
               ),
 
-              const SizedBox(
-                height: 10,
-              ),
-
-              const Text(
-
-                "Login to continue using PunchIn Pro",
-
-                style: TextStyle(
-
-                  color:
-                  Colors.white70,
-
-                  fontSize: 16,
-
-                ),
-
-              ),
-
-              const SizedBox(
-                height: 40,
-              ),
+              const SizedBox(height: 40),
 
               // =========================
               // EMAIL
               // =========================
-
               TextField(
+                controller: emailController,
 
-                controller:
-                emailController,
+                style: const TextStyle(color: Colors.white),
 
-                style:
-                const TextStyle(
+                decoration: InputDecoration(
+                  hintText: "Enter Email",
 
-                  color:
-                  Colors.white,
+                  hintStyle: const TextStyle(color: Colors.white54),
 
-                ),
-
-                decoration:
-                InputDecoration(
-
-                  hintText:
-                  "Enter Email",
-
-                  hintStyle:
-                  const TextStyle(
-
-                    color:
-                    Colors.white54,
-
-                  ),
-
-                  prefixIcon:
-                  const Icon(
-
-                    Icons.email,
-
-                    color:
-                    Colors.white70,
-
-                  ),
+                  prefixIcon: const Icon(Icons.email, color: Colors.white70),
 
                   filled: true,
 
-                  fillColor:
-                  Colors.white10,
+                  fillColor: Colors.white10,
 
-                  border:
-                  OutlineInputBorder(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
 
-                    borderRadius:
-                    BorderRadius.circular(20),
-
-                    borderSide:
-                    BorderSide.none,
-
+                    borderSide: BorderSide.none,
                   ),
-
                 ),
-
               ),
 
-              const SizedBox(
-                height: 25,
-              ),
+              const SizedBox(height: 25),
 
               // =========================
               // PASSWORD
               // =========================
-
               TextField(
+                controller: passwordController,
 
-                controller:
-                passwordController,
+                obscureText: obscurePassword,
 
-                obscureText:
-                obscurePassword,
+                style: const TextStyle(color: Colors.white),
 
-                style:
-                const TextStyle(
+                decoration: InputDecoration(
+                  hintText: "Enter Password",
 
-                  color:
-                  Colors.white,
+                  hintStyle: const TextStyle(color: Colors.white54),
 
-                ),
+                  prefixIcon: const Icon(Icons.lock, color: Colors.white70),
 
-                decoration:
-                InputDecoration(
-
-                  hintText:
-                  "Enter Password",
-
-                  hintStyle:
-                  const TextStyle(
-
-                    color:
-                    Colors.white54,
-
-                  ),
-
-                  prefixIcon:
-                  const Icon(
-
-                    Icons.lock,
-
-                    color:
-                    Colors.white70,
-
-                  ),
-
-                  suffixIcon:
-                  IconButton(
-
+                  suffixIcon: IconButton(
                     onPressed: () {
-
                       setState(() {
-
-                        obscurePassword =
-                        !obscurePassword;
-
+                        obscurePassword = !obscurePassword;
                       });
-
                     },
 
                     icon: Icon(
+                      obscurePassword ? Icons.visibility : Icons.visibility_off,
 
-                      obscurePassword
-
-                      ? Icons.visibility
-
-                      : Icons.visibility_off,
-
-                      color:
-                      Colors.white70,
-
+                      color: Colors.white70,
                     ),
-
                   ),
 
                   filled: true,
 
-                  fillColor:
-                  Colors.white10,
+                  fillColor: Colors.white10,
 
-                  border:
-                  OutlineInputBorder(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
 
-                    borderRadius:
-                    BorderRadius.circular(20),
-
-                    borderSide:
-                    BorderSide.none,
-
+                    borderSide: BorderSide.none,
                   ),
-
                 ),
-
               ),
 
-              const SizedBox(
-                height: 35,
-              ),
+              const SizedBox(height: 35),
 
               // =========================
               // LOGIN BUTTON
               // =========================
-
               SizedBox(
-
                 width: double.infinity,
 
                 height: 60,
 
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF2563EB),
 
-                  style:
-                  ElevatedButton.styleFrom(
-
-                    backgroundColor:
-                    const Color(0xFF2563EB),
-
-                    shape:
-                    RoundedRectangleBorder(
-
-                      borderRadius:
-                      BorderRadius.circular(20),
-
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
                     ),
-
                   ),
 
-                  onPressed:
+                  onPressed: isLoading ? null : loginUser,
 
-                  isLoading
-                  ? null
-                  : loginUser,
+                  child: isLoading
+                      ? const SizedBox(
+                          height: 24,
 
-                  child:
+                          width: 24,
 
-                  isLoading
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
 
-                  ? const SizedBox(
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text(
+                          "Login",
 
-                      height: 24,
+                          style: TextStyle(
+                            fontSize: 18,
 
-                      width: 24,
-
-                      child:
-                      CircularProgressIndicator(
-
-                        color:
-                        Colors.white,
-
-                        strokeWidth: 2,
-
-                      ),
-
-                    )
-
-                  : const Text(
-
-                      "Login",
-
-                      style: TextStyle(
-
-                        fontSize: 18,
-
-                        fontWeight:
-                        FontWeight.bold,
-
-                      ),
-
-                    ),
-
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                 ),
-
               ),
 
-              const SizedBox(
-                height: 25,
-              ),
+              const SizedBox(height: 25),
 
               // =========================
               // REGISTER
               // =========================
-
               Center(
-
                 child: TextButton(
-
                   onPressed: () {
-
                     Navigator.push(
-
                       context,
 
                       MaterialPageRoute(
-
-                        builder: (context) =>
-                        const RegisterScreen(),
-
+                        builder: (context) => const RegisterScreen(),
                       ),
-
                     );
-
                   },
 
                   child: const Text(
-
                     "Don't have an account? Register",
 
-                    style: TextStyle(
-
-                      color:
-                      Colors.white70,
-
-                    ),
-
+                    style: TextStyle(color: Colors.white70),
                   ),
-
                 ),
-
               ),
-
             ],
-
           ),
-
         ),
-
       ),
-
     );
-
   }
-
 }

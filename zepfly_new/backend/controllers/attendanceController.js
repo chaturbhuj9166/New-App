@@ -104,24 +104,13 @@ const punchIn = async (
 
 
     // CHECK TIME
-
-  const isPunchInAllowed = (
-  now
-) => {
-
-  const hour =
-  now.getHours();
-
-  return (
-    hour >= 9 &&
-    hour < 19
-  );
-
-};
-
-module.exports = {
-  isPunchInAllowed,
-};
+    // CHECK TIME (9 AM - 7 PM)
+    if (!isPunchInAllowed(now)) {
+      return res.status(400).json({
+        success: false,
+        message: "Punch In only allowed between 9:00 AM and 7:00 PM",
+      });
+    }
 
     // CHECK ACTIVE SESSION
 
